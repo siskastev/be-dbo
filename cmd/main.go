@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"test-be-dbo/internal/config/database"
 	"test-be-dbo/internal/config/routes"
 	"test-be-dbo/internal/config/server"
 
@@ -14,6 +15,9 @@ func main() {
 	if err := godotenv.Load(".env"); err != nil {
 		log.Fatalf("Error loading .env file")
 	}
+
+	// Initialize database
+	database.Init()
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()

@@ -8,7 +8,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func Init() *gorm.DB {
+var DB *gorm.DB
+
+func Init() {
 
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
@@ -26,5 +28,5 @@ func Init() *gorm.DB {
 
 	seeder(db)
 
-	return db
+	DB = db
 }
