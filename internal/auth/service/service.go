@@ -5,6 +5,6 @@ import (
 )
 
 type Service interface {
-	RegisterUser(user models.RegisterRequest) (models.UserResponse, error)
-	LoginUser(user models.LoginRequest) (models.UserResponse, error)
+	RegisterUser(request models.RegisterRequest) (models.UserResponse, error)
+	LoginUser(request models.LoginRequest) (models.UserResponse, error)
 }

@@ -24,9 +24,9 @@ func GenerateHashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-func (u *userService) RegisterUser(user models.RegisterRequest) (models.UserResponse, error) {
+func (u *userService) RegisterUser(request models.RegisterRequest) (models.UserResponse, error) {
 
-	isEmailExists, err := u.userRepo.EmailExists(user.Email)
+	isEmailExists, err := u.userRepo.EmailExists(request.Email)
 	if err != nil {
 		return models.UserResponse{}, err
 	}
@@ -35,14 +35,14 @@ func (u *userService) RegisterUser(user models.RegisterRequest) (models.UserResp
 		return models.UserResponse{}, errors.New("user already registered")
 	}
 
-	hashedPassword, err := GenerateHashPassword(user.Password)
+	hashedPassword, err := GenerateHashPassword(request.Password)
 	if err != nil {
 		return models.UserResponse{}, err
 	}
 
 	userData := models.User{
-		Name:     user.Name,
-		Email:    user.Email,
+		Name:     request.Name,
+		Email:    request.Email,
 		Password: hashedPassword,
 	}
 
