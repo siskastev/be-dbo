@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"test-be-dbo/internal/helpers"
 	"test-be-dbo/internal/models"
 
 	"gorm.io/gorm"
@@ -55,4 +56,34 @@ func (c *customerRepository) GetByIDCustomer(id string) (models.Customer, error)
 		return customer, err
 	}
 	return customer, nil
+}
+
+func (c *customerRepository) GetAll(paginationParams helpers.PaginationParams, filters models.FilterCustomers) ([]models.Customer, int64, error) {
+	var customers []models.Customer
+
+	query := c.db.Model(&models.Customer{})
+
+	if filters.Name != "" {
+		query = query.Where("name LIKE ?", "%"+filters.Name+"%")
+	}
+	if filters.ID != "" {
+		query = query.Where("id = ?", filters.ID)
+	}
+	if filters.Gender != "" {
+		query = query.Where("gender = ?", filters.Gender)
+	}
+
+	var totalRecords int64
+	if err := query.Count(&totalRecords).Error; err != nil {
+		return nil, 0, err
+	}
+
+	offset := paginationParams.GetOffset()
+	limit := paginationParams.PageSize
+
+	if err := query.Offset(offset).Limit(limit).Find(&customers).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return customers, totalRecords, nil
 }

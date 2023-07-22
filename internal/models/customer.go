@@ -51,3 +51,9 @@ type CustomerResponse struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	UpdatedBy string     `json:"updated_by,omitempty"`
 }
+
+type FilterCustomers struct {
+	ID     string `form:"id"`
+	Name   string `form:"name"`
+	Gender string `form:"gender"`
+}

@@ -30,4 +30,5 @@ func (a *CustomerRoute) RegisterRoute(r *gin.RouterGroup) {
 	r.PUT("/customers/:id", a.handler.UpdateCustomer)
 	r.DELETE("/customers/:id", a.handler.DeleteCustomer)
 	r.GET("/customers/:id", a.handler.GetByIDCustomer)
+	r.GET("/customers", a.handler.GetAllCustomers)
 }

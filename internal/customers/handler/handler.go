@@ -104,3 +104,28 @@ func (h *HandlerCustomer) DeleteCustomer(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Success Delete ID" + customerID})
 }
+
+func (h *HandlerCustomer) GetAllCustomers(c *gin.Context) {
+
+	paginationParams := helpers.GetPaginationParams(c)
+
+	var filter models.FilterCustomers
+	if err := c.ShouldBindQuery(&filter); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid query parameters"})
+		return
+	}
+
+	customers, meta, err := h.customerService.GetAll(
+		paginationParams,
+		filter,
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": customers,
+		"meta": meta,
+	})
+}

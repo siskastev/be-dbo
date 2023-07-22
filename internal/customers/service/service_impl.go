@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"test-be-dbo/internal/customers/repository"
+	"test-be-dbo/internal/helpers"
 	"test-be-dbo/internal/models"
 )
 
@@ -120,4 +121,39 @@ func (c *customerService) GetByIDCustomer(id string) (models.CustomerResponse, e
 	}
 
 	return response, nil
+}
+
+func (c *customerService) GetAll(paginationParams helpers.PaginationParams, filters models.FilterCustomers) ([]models.CustomerResponse, helpers.MetaData, error) {
+
+	result, totalRecords, err := c.customerRepo.GetAll(paginationParams, filters)
+	if err != nil {
+		return []models.CustomerResponse{}, helpers.MetaData{}, err
+	}
+
+	metaData := helpers.MetaData{
+		TotalRecords: totalRecords,
+		Page:         paginationParams.Page,
+		Offset:       paginationParams.GetOffset(),
+		Limit:        paginationParams.PageSize,
+	}
+	metaData.TotalPages = metaData.CalculateTotalPage()
+
+	var response []models.CustomerResponse
+	for _, customer := range result {
+		customerResponse := models.CustomerResponse{
+			ID:        customer.ID.String(),
+			Name:      customer.Name,
+			Email:     customer.Email,
+			Address:   customer.Address,
+			Phone:     customer.Phone,
+			Gender:    customer.Gender,
+			CreatedBy: customer.CreatedBy,
+			CreatedAt: &customer.CreatedAt,
+			UpdatedAt: &customer.UpdatedAt,
+			UpdatedBy: customer.UpdatedBy,
+		}
+		response = append(response, customerResponse)
+	}
+
+	return response, metaData, nil
 }
