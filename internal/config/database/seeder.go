@@ -8,6 +8,6 @@ import (
 
 func seeder(db *gorm.DB) {
 	//migrate schema
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Customer{})
 
 }
