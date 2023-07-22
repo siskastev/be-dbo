@@ -1,8 +1,13 @@
 package database
 
-import "gorm.io/gorm"
+import (
+	"test-be-dbo/internal/models"
+
+	"gorm.io/gorm"
+)
 
 func seeder(db *gorm.DB) {
 	//migrate schema
+	db.AutoMigrate(&models.User{})
 
 }
