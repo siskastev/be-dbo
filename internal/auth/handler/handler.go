@@ -47,7 +47,7 @@ func (h *HandlerAuth) Register(c *gin.Context) {
 		},
 	}
 
-	c.JSON(http.StatusAccepted, response)
+	c.JSON(http.StatusAccepted, gin.H{"data": response})
 }
 
 func (h *HandlerAuth) Login(c *gin.Context) {
@@ -80,5 +80,5 @@ func (h *HandlerAuth) Login(c *gin.Context) {
 		},
 	}
 
-	c.JSON(http.StatusAccepted, response)
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
