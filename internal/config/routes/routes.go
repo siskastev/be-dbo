@@ -1,15 +1,22 @@
 package routes
 
 import (
-	"net/http"
+	authRoutes "test-be-dbo/internal/auth/routes"
+	"test-be-dbo/internal/config/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Setup(router *gin.Engine) {
+
 	routeGroup := router.Group("/api")
 
-	routeGroup.GET("", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Hello World"})
-	})
+	authRoutes.NewAuthRoute(
+		authRoutes.ProvideManageHandler(),
+	).RegisterRoute(routeGroup)
+
+	routeGroup.Use(middleware.JWTMiddleware())
+	{
+		//
+	}
 }
