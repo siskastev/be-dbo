@@ -8,6 +8,7 @@ import (
 	ordService "test-be-dbo/internal/orders/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type HandlerOrder struct {
@@ -20,6 +21,7 @@ func NewHandlerUser(orderService ordService.Service, customerService custService
 }
 
 func (h *HandlerOrder) CreateOrder(c *gin.Context) {
+	logger := c.MustGet("logger").(*logrus.Logger)
 	var request models.OrderRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		validationErrors := helpers.HandleValidationErrors(err)
@@ -54,6 +56,12 @@ func (h *HandlerOrder) CreateOrder(c *gin.Context) {
 
 	result, err := h.orderService.CreateOrder(request)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method":  c.Request.Method,
+			"route":   c.Request.URL.Path,
+			"error":   err.Error(),
+			"payload": request,
+		}).Error("Internal Server Error")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -62,7 +70,7 @@ func (h *HandlerOrder) CreateOrder(c *gin.Context) {
 }
 
 func (h *HandlerOrder) DeleteHandler(c *gin.Context) {
-
+	logger := c.MustGet("logger").(*logrus.Logger)
 	orderID := c.Param("id")
 	id := helpers.ParseUUID(orderID)
 
@@ -73,6 +81,11 @@ func (h *HandlerOrder) DeleteHandler(c *gin.Context) {
 	}
 
 	if err := h.orderService.DeleteOrder(id); err != nil {
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Internal Server Error")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -81,6 +94,7 @@ func (h *HandlerOrder) DeleteHandler(c *gin.Context) {
 }
 
 func (h *HandlerOrder) GetOrderByID(c *gin.Context) {
+	logger := c.MustGet("logger").(*logrus.Logger)
 
 	orderID := c.Param("id")
 	id := helpers.ParseUUID(orderID)
@@ -93,6 +107,11 @@ func (h *HandlerOrder) GetOrderByID(c *gin.Context) {
 
 	result, err := h.orderService.GetOrderByID(id)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Internal Server Error")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -101,6 +120,7 @@ func (h *HandlerOrder) GetOrderByID(c *gin.Context) {
 }
 
 func (h *HandlerOrder) UpdateOrder(c *gin.Context) {
+	logger := c.MustGet("logger").(*logrus.Logger)
 	var request models.OrderRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		validationErrors := helpers.HandleValidationErrors(err)
@@ -151,6 +171,12 @@ func (h *HandlerOrder) UpdateOrder(c *gin.Context) {
 
 	result, err := h.orderService.UpdateOrder(request, id)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method":  c.Request.Method,
+			"route":   c.Request.URL.Path,
+			"error":   err.Error(),
+			"payload": request,
+		}).Error("Internal Server Error")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -159,7 +185,7 @@ func (h *HandlerOrder) UpdateOrder(c *gin.Context) {
 }
 
 func (h *HandlerOrder) GetAll(c *gin.Context) {
-
+	logger := c.MustGet("logger").(*logrus.Logger)
 	paginationParams := helpers.GetPaginationParams(c)
 
 	var filter models.FilterOrders
@@ -173,6 +199,11 @@ func (h *HandlerOrder) GetAll(c *gin.Context) {
 		filter,
 	)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Internal Server Error")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}

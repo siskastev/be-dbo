@@ -27,6 +27,9 @@ func main() {
 	// Enable CORS middleware
 	router.Use(middleware.CORS())
 
+	//logger
+	router.Use(middleware.LoggerMiddleware())
+
 	// Initialize routes from the "routes" package
 	routes.Setup(router)
 

@@ -7,6 +7,7 @@ import (
 	"test-be-dbo/internal/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type HandlerAuth struct {
@@ -19,6 +20,8 @@ func NewHandlerUser(userService service.Service) *HandlerAuth {
 
 func (h *HandlerAuth) Register(c *gin.Context) {
 
+	logger := c.MustGet("logger").(*logrus.Logger)
+
 	var request models.RegisterRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -29,6 +32,12 @@ func (h *HandlerAuth) Register(c *gin.Context) {
 
 	userResponse, err := h.userService.RegisterUser(request)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method":  c.Request.Method,
+			"route":   c.Request.URL.Path,
+			"error":   err.Error(),
+			"payload": request,
+		}).Error("Failed to parse register user")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -36,6 +45,11 @@ func (h *HandlerAuth) Register(c *gin.Context) {
 	// Generate JWT token
 	token, err := helpers.GenerateJWT(userResponse)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Failed to generate token")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -51,6 +65,7 @@ func (h *HandlerAuth) Register(c *gin.Context) {
 }
 
 func (h *HandlerAuth) Login(c *gin.Context) {
+	logger := c.MustGet("logger").(*logrus.Logger)
 
 	var request models.LoginRequest
 
@@ -62,6 +77,11 @@ func (h *HandlerAuth) Login(c *gin.Context) {
 
 	userResponse, err := h.userService.LoginUser(request)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Failed to parse login user")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -69,6 +89,11 @@ func (h *HandlerAuth) Login(c *gin.Context) {
 	// Generate JWT token
 	token, err := helpers.GenerateJWT(userResponse)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Failed to parse register user")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}

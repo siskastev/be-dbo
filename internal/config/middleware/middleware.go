@@ -4,10 +4,13 @@ import (
 	"context"
 	"net/http"
 	"strings"
+	"test-be-dbo/internal/config/logger"
 	"test-be-dbo/internal/helpers"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 func JWTMiddleware() gin.HandlerFunc {
@@ -43,4 +46,24 @@ func CORS() gin.HandlerFunc {
 	config.AllowHeaders = []string{"Authorization", "Content-Type"}
 
 	return cors.New(config)
+}
+
+func LoggerMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+
+		c.Set("logger", logger.Logger())
+
+		c.Next()
+
+		end := time.Now()
+		latency := end.Sub(start)
+
+		logger.Logger().WithFields(logrus.Fields{
+			"method":  c.Request.Method,
+			"route":   c.Request.URL.Path,
+			"status":  c.Writer.Status(),
+			"latency": latency,
+		}).Info("Request processed")
+	}
 }

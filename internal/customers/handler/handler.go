@@ -7,6 +7,7 @@ import (
 	"test-be-dbo/internal/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type HandlerCustomer struct {
@@ -18,6 +19,8 @@ func NewHandlerCustomer(customerService service.Service) *HandlerCustomer {
 }
 
 func (h *HandlerCustomer) CreateCustomer(c *gin.Context) {
+	logger := c.MustGet("logger").(*logrus.Logger)
+
 	var request models.CustomerRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -31,6 +34,12 @@ func (h *HandlerCustomer) CreateCustomer(c *gin.Context) {
 
 	customerResponse, err := h.customerService.CreateCustomer(request)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method":  c.Request.Method,
+			"route":   c.Request.URL.Path,
+			"error":   err.Error(),
+			"payload": request,
+		}).Error("Internal Server Error")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -52,6 +61,8 @@ func (h *HandlerCustomer) GetByIDCustomer(c *gin.Context) {
 }
 
 func (h *HandlerCustomer) UpdateCustomer(c *gin.Context) {
+	logger := c.MustGet("logger").(*logrus.Logger)
+
 	var request models.CustomerRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -73,6 +84,12 @@ func (h *HandlerCustomer) UpdateCustomer(c *gin.Context) {
 
 	CustomerResponse, err := h.customerService.UpdateCustomer(request, customerID)
 	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"method":  c.Request.Method,
+			"route":   c.Request.URL.Path,
+			"error":   err.Error(),
+			"payload": request,
+		}).Error("Internal Server Error")
 		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
@@ -81,6 +98,7 @@ func (h *HandlerCustomer) UpdateCustomer(c *gin.Context) {
 }
 
 func (h *HandlerCustomer) DeleteCustomer(c *gin.Context) {
+	logger := c.MustGet("logger").(*logrus.Logger)
 
 	customerID := c.Param("id")
 
@@ -91,6 +109,11 @@ func (h *HandlerCustomer) DeleteCustomer(c *gin.Context) {
 	}
 
 	if err := h.customerService.DeleteCustomer(customerID); err != nil {
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Internal Server Error")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -100,10 +123,17 @@ func (h *HandlerCustomer) DeleteCustomer(c *gin.Context) {
 
 func (h *HandlerCustomer) GetAllCustomers(c *gin.Context) {
 
+	logger := c.MustGet("logger").(*logrus.Logger)
+
 	paginationParams := helpers.GetPaginationParams(c)
 
 	var filter models.FilterCustomers
 	if err := c.ShouldBindQuery(&filter); err != nil {
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Invalid query parameters")
 		c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid query parameters"})
 		return
 	}
@@ -113,7 +143,12 @@ func (h *HandlerCustomer) GetAllCustomers(c *gin.Context) {
 		filter,
 	)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
+		logger.WithFields(logrus.Fields{
+			"method": c.Request.Method,
+			"route":  c.Request.URL.Path,
+			"error":  err.Error(),
+		}).Error("Internal server error")
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
