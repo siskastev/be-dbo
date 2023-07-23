@@ -6,6 +6,7 @@ import (
 	"strings"
 	"test-be-dbo/internal/helpers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -33,4 +34,13 @@ func JWTMiddleware() gin.HandlerFunc {
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()
 	}
+}
+
+func CORS() gin.HandlerFunc {
+	// Enable CORS middleware
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{"Authorization", "Content-Type"}
+
+	return cors.New(config)
 }

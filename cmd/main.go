@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"test-be-dbo/internal/config/database"
+	"test-be-dbo/internal/config/middleware"
 	"test-be-dbo/internal/config/routes"
 	"test-be-dbo/internal/config/server"
 
@@ -20,7 +21,11 @@ func main() {
 	database.Init()
 
 	gin.SetMode(gin.ReleaseMode)
+
 	router := gin.Default()
+
+	// Enable CORS middleware
+	router.Use(middleware.CORS())
 
 	// Initialize routes from the "routes" package
 	routes.Setup(router)
