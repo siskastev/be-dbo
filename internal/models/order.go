@@ -100,4 +100,5 @@ type FilterOrders struct {
 	ID         string `form:"id"`
 	Name       string `form:"customer_name"`
 	TotalItems int    `form:"total_items"`
+	Status     status `form:"status"`
 }

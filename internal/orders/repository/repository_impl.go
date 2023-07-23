@@ -195,6 +195,10 @@ func (o *orderRepository) GetAll(paginationParams helpers.PaginationParams, filt
 		query = query.Where("id = ?", filters.ID)
 	}
 
+	if filters.Status != "" {
+		query = query.Where("status = ?", filters.Status)
+	}
+
 	if filters.TotalItems > 0 {
 		query = query.Where("total_items = ?", filters.TotalItems)
 	}
