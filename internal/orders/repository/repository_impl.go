@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"test-be-dbo/internal/helpers"
 	"test-be-dbo/internal/models"
 
 	"github.com/google/uuid"
@@ -178,4 +179,37 @@ func (o *orderRepository) OrderHasPaid(id uuid.UUID) (bool, error) {
 		return false, err
 	}
 	return order.ID.String() != "", nil
+}
+
+func (o *orderRepository) GetAll(paginationParams helpers.PaginationParams, filters models.FilterOrders) ([]models.Order, int64, error) {
+	var orders []models.Order
+
+	query := o.db.Model(models.Order{}).Unscoped().Preload("Customer")
+
+	if filters.Name != "" {
+		query = query.Joins("JOIN customers ON orders.customer_id = customers.id").
+			Where("customers.name LIKE ?", "%"+filters.Name+"%")
+	}
+
+	if filters.ID != "" {
+		query = query.Where("id = ?", filters.ID)
+	}
+
+	if filters.TotalItems > 0 {
+		query = query.Where("total_items = ?", filters.TotalItems)
+	}
+
+	var totalRecords int64
+	if err := query.Count(&totalRecords).Error; err != nil {
+		return nil, 0, err
+	}
+
+	offset := paginationParams.GetOffset()
+	limit := paginationParams.PageSize
+
+	if err := query.Offset(offset).Limit(limit).Find(&orders).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return orders, totalRecords, nil
 }

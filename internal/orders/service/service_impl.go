@@ -239,3 +239,37 @@ func (o *orderService) GetOrderByID(id uuid.UUID) (models.ManageOrderResponse, e
 
 	return response, nil
 }
+
+func (o *orderService) GetAll(paginationParams helpers.PaginationParams, filters models.FilterOrders) ([]models.ManageOrderResponse, helpers.MetaData, error) {
+	result, totalRecords, err := o.orderRepo.GetAll(paginationParams, filters)
+	if err != nil {
+		return []models.ManageOrderResponse{}, helpers.MetaData{}, err
+	}
+
+	metaData := helpers.MetaData{
+		TotalRecords: totalRecords,
+		Page:         paginationParams.Page,
+		Offset:       paginationParams.GetOffset(),
+		Limit:        paginationParams.PageSize,
+	}
+	metaData.TotalPages = metaData.CalculateTotalPage()
+
+	var response []models.ManageOrderResponse
+	for _, order := range result {
+		OrderResponse := models.ManageOrderResponse{
+			ID:           order.ID.String(),
+			CustomerID:   order.CustomerID.String(),
+			CustomerName: order.Customer.Name,
+			Status:       order.Status,
+			TotalItems:   order.TotalItems,
+			TotalPrice:   order.TotalPrice,
+			CreatedAt:    order.CreatedAt,
+			CreatedBy:    order.CreatedBy,
+			UpdatedAt:    order.UpdatedAt,
+			UpdatedBy:    order.UpdatedBy,
+		}
+		response = append(response, OrderResponse)
+	}
+
+	return response, metaData, nil
+}

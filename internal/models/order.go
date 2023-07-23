@@ -93,5 +93,11 @@ type ManageOrderResponse struct {
 	CreatedBy    string                `json:"created_by,omitempty"`
 	UpdatedAt    time.Time             `json:"updated_at,omitempty"`
 	UpdatedBy    string                `json:"updated_by,omitempty"`
-	OrderDetail  []OrderDetailResponse `json:"order_detail"`
+	OrderDetail  []OrderDetailResponse `json:"orders_detail,omitempty"`
+}
+
+type FilterOrders struct {
+	ID         string `form:"id"`
+	Name       string `form:"customer_name"`
+	TotalItems int    `form:"total_items"`
 }

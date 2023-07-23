@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"test-be-dbo/internal/helpers"
 	"test-be-dbo/internal/models"
 
 	"github.com/google/uuid"
@@ -15,4 +16,5 @@ type Repository interface {
 	OrderIDExist(id uuid.UUID) (bool, error)
 	UpdateOrder(order models.Order, id uuid.UUID) (models.Order, error)
 	OrderHasPaid(id uuid.UUID) (bool, error)
+	GetAll(paginationParams helpers.PaginationParams, filters models.FilterOrders) ([]models.Order, int64, error)
 }

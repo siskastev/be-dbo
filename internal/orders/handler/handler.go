@@ -68,12 +68,12 @@ func (h *HandlerOrder) DeleteHandler(c *gin.Context) {
 
 	_, err := h.orderService.OrderIDExist(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return
 	}
 
 	if err := h.orderService.DeleteOrder(id); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -87,13 +87,13 @@ func (h *HandlerOrder) GetOrderByID(c *gin.Context) {
 
 	_, err := h.orderService.OrderIDExist(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return
 	}
 
 	result, err := h.orderService.GetOrderByID(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -113,7 +113,7 @@ func (h *HandlerOrder) UpdateOrder(c *gin.Context) {
 
 	_, err := h.orderService.OrderIDExist(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -156,4 +156,29 @@ func (h *HandlerOrder) UpdateOrder(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": result})
+}
+
+func (h *HandlerOrder) GetAll(c *gin.Context) {
+
+	paginationParams := helpers.GetPaginationParams(c)
+
+	var filter models.FilterOrders
+	if err := c.ShouldBindQuery(&filter); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid query parameters"})
+		return
+	}
+
+	customers, meta, err := h.orderService.GetAll(
+		paginationParams,
+		filter,
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": customers,
+		"meta": meta,
+	})
 }
