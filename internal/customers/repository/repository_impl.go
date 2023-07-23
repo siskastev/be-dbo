@@ -24,7 +24,7 @@ func (c *customerRepository) CreateCustomer(customer models.Customer) (models.Cu
 
 func (c *customerRepository) EmailExists(email string) (bool, error) {
 	var customer models.Customer
-	if err := c.db.Where(models.User{Email: email}).First(&customer).Error; err != nil {
+	if err := c.db.Where(models.Customer{Email: email}).First(&customer).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return false, nil
 		}

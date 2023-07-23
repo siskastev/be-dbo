@@ -8,5 +8,5 @@ CREATE TABLE orders_detail (
    total_price numeric NOT NULL DEFAULT 0,
    created_at timestamptz NULL,
    updated_at timestamptz NULL,
-   CONSTRAINT fk_orders_customer FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+   CONSTRAINT fk_orders FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );

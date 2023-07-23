@@ -29,7 +29,7 @@ func (h *HandlerAuth) Register(c *gin.Context) {
 
 	userResponse, err := h.userService.RegisterUser(request)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -47,7 +47,7 @@ func (h *HandlerAuth) Register(c *gin.Context) {
 		},
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{"data": response})
+	c.JSON(http.StatusCreated, gin.H{"data": response})
 }
 
 func (h *HandlerAuth) Login(c *gin.Context) {
@@ -62,7 +62,7 @@ func (h *HandlerAuth) Login(c *gin.Context) {
 
 	userResponse, err := h.userService.LoginUser(request)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 

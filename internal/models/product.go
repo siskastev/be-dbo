@@ -14,3 +14,12 @@ type Product struct {
 	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
 }
+
+type ProductResponse struct {
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	Qty       uint16    `json:"qty"`
+	Price     float64   `json:"price"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
