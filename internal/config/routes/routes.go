@@ -4,6 +4,7 @@ import (
 	authRoutes "test-be-dbo/internal/auth/routes"
 	"test-be-dbo/internal/config/middleware"
 	customerRoutes "test-be-dbo/internal/customers/routes"
+	orderRoutes "test-be-dbo/internal/orders/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,6 +21,10 @@ func Setup(router *gin.Engine) {
 	{
 		customerRoutes.NewCustomerRoute(
 			customerRoutes.ProvideManageHandler(),
+		).RegisterRoute(routeGroup)
+
+		orderRoutes.NewOrderRoute(
+			orderRoutes.ProvideManageHandler(),
 		).RegisterRoute(routeGroup)
 	}
 }

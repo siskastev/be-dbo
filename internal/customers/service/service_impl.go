@@ -157,3 +157,14 @@ func (c *customerService) GetAll(paginationParams helpers.PaginationParams, filt
 
 	return response, metaData, nil
 }
+
+func (c *customerService) CustomerIDExists(id string) (bool, error) {
+	_, err := c.customerRepo.GetByIDCustomer(id)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+
+}

@@ -11,4 +11,5 @@ type Service interface {
 	DeleteCustomer(id string) error
 	GetByIDCustomer(id string) (models.CustomerResponse, error)
 	GetAll(paginationParams helpers.PaginationParams, filter models.FilterCustomers) ([]models.CustomerResponse, helpers.MetaData, error)
+	CustomerIDExists(id string) (bool, error)
 }
