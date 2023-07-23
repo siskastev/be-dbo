@@ -31,11 +31,11 @@ func (h *HandlerCustomer) CreateCustomer(c *gin.Context) {
 
 	customerResponse, err := h.customerService.CreateCustomer(request)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{"data": customerResponse})
+	c.JSON(http.StatusCreated, gin.H{"data": customerResponse})
 }
 
 func (h *HandlerCustomer) GetByIDCustomer(c *gin.Context) {
@@ -44,7 +44,7 @@ func (h *HandlerCustomer) GetByIDCustomer(c *gin.Context) {
 
 	CustomerResponse, err := h.customerService.GetByIDCustomer(customerID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -62,16 +62,9 @@ func (h *HandlerCustomer) UpdateCustomer(c *gin.Context) {
 
 	customerID := c.Param("id")
 
-	// // Convert the customer ID string to a UUID
-	// parsedID, err := uuid.Parse(customerID)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid customer ID"})
-	// 	return
-	// }
-
 	_, err := h.customerService.GetByIDCustomer(customerID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -80,7 +73,7 @@ func (h *HandlerCustomer) UpdateCustomer(c *gin.Context) {
 
 	CustomerResponse, err := h.customerService.UpdateCustomer(request, customerID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -93,7 +86,7 @@ func (h *HandlerCustomer) DeleteCustomer(c *gin.Context) {
 
 	_, err := h.customerService.GetByIDCustomer(customerID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -111,7 +104,7 @@ func (h *HandlerCustomer) GetAllCustomers(c *gin.Context) {
 
 	var filter models.FilterCustomers
 	if err := c.ShouldBindQuery(&filter); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid query parameters"})
+		c.JSON(http.StatusBadRequest, gin.H{"errors": "Invalid query parameters"})
 		return
 	}
 
@@ -120,7 +113,7 @@ func (h *HandlerCustomer) GetAllCustomers(c *gin.Context) {
 		filter,
 	)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"errors": "Internal server error"})
 		return
 	}
 
