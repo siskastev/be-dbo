@@ -1,0 +1,888 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DBO API BE",
+    "contact": {},
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9000/api",
+      "variables": {}
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login",
+        "operationId": "Login",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LoginRequest"
+                  },
+                  {
+                    "example": {
+                      "email": "bunga@gmail.com",
+                      "password": "12347890"
+                    }
+                  }
+                ]
+              },
+              "example": {
+                "email": "bunga@gmail.com",
+                "password": "12347890"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register",
+        "operationId": "Register",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RegisterRequest"
+                  },
+                  {
+                    "example": {
+                      "name": "Bunga Harum",
+                      "email": "bunga@gmail.com",
+                      "password": "12347890"
+                    }
+                  }
+                ]
+              },
+              "example": {
+                "name": "Bunga Harum",
+                "email": "bunga@gmail.com",
+                "password": "12347890"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/customers": {
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Create",
+        "operationId": "Create",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRequest"
+                  },
+                  {
+                    "example": {
+                      "name": "Hai Dia",
+                      "address": "Surgawi",
+                      "email": "karenadia@gmail.com",
+                      "gender": "female",
+                      "phone": "123456789012"
+                    }
+                  }
+                ]
+              },
+              "example": {
+                "name": "Hai Dia",
+                "address": "Surgawi",
+                "email": "karenadia@gmail.com",
+                "gender": "female",
+                "phone": "123456789012"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "ALL",
+        "operationId": "ALL",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "page pagination default 1",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 2
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "limit pagination default 10",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "customer name",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "ka"
+            }
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "description": "gender name only input female or male",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "female"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID customer",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "b7fc44e0-c56d-47df-9bb4-4e83047a65ca"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/customers/{id}": {
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Update",
+        "operationId": "Update",
+        "parameters": [
+          {
+             "$ref": "#/components/parameters/customerID"
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateRequest"
+                  },
+                  {
+                    "example": {
+                      "name": "Kelas Dunia",
+                      "address": "Surgawi",
+                      "email": "mugkinkahstincky@gmail.com",
+                      "gender": "male",
+                      "phone": "123456789012"
+                    }
+                  }
+                ]
+              },
+              "example": {
+                "name": "Kelas Dunia",
+                "address": "Surgawi",
+                "email": "jagoankelas@gmail.com",
+                "gender": "male",
+                "phone": "123456789012"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "ByID",
+        "operationId": "ByID",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Delete",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/orders": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Create",
+        "operationId": "PostCreate",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRequest1"
+                  },
+                  {
+                    "example": {
+                      "customer_id": "f54dee8c-871a-4a08-9a16-0193c86de88d",
+                      "products": [
+                        {
+                          "product_id": "1f7d8f94-e6cb-4546-9b20-3a3d37c708a0",
+                          "qty": 5
+                        },
+                        {
+                          "product_id": "c2e94384-4a92-491e-9b14-f5c48a352660",
+                          "qty": 10
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "example": {
+                "customer_id": "f54dee8c-871a-4a08-9a16-0193c86de88d",
+                "products": [
+                  {
+                    "product_id": "1f7d8f94-e6cb-4546-9b20-3a3d37c708a0",
+                    "qty": 5
+                  },
+                  {
+                    "product_id": "c2e94384-4a92-491e-9b14-f5c48a352660",
+                    "qty": 10
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "All",
+        "operationId": "All",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page pagination default 1",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 2
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Order ID",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "13339b2b-ea96-45f4-9f4b-3e5c12d2a6f8"
+            }
+          },
+          {
+            "name": "customer_name",
+            "in": "query",
+            "description": "customer name",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "kala"
+            }
+          },
+          {
+            "name": "total_items",
+            "in": "query",
+            "description": "total items",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 3
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "limit pagination default 10",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "example": 1
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status order only paid or unpaid",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "unpaid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/orders/{id}": {
+      "delete": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Delete",
+        "operationId": "Delete1",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/orderID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Update",
+        "operationId": "PutUpdate",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/orderID"
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateRequest1"
+                  },
+                  {
+                    "example": {
+                      "customer_id": "b7fc44e0-c56d-47df-9bb4-4e83047a65ca",
+                      "products": [
+                        {
+                          "product_id": "3a67c98f-afd0-4311-b602-9d34c1338d36",
+                          "qty": 5
+                        },
+                        {
+                          "product_id": "f5057ed3-3f34-4601-a33f-07373595931e",
+                          "qty": 10
+                        },
+                        {
+                          "product_id": "ea8ebd9a-a3b6-45fe-a4bb-4c31d2f1c58f",
+                          "qty": 10
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "example": {
+                "customer_id": "b7fc44e0-c56d-47df-9bb4-4e83047a65ca",
+                "products": [
+                  {
+                    "product_id": "3a67c98f-afd0-4311-b602-9d34c1338d36",
+                    "qty": 5
+                  },
+                  {
+                    "product_id": "f5057ed3-3f34-4601-a33f-07373595931e",
+                    "qty": 10
+                  },
+                  {
+                    "product_id": "ea8ebd9a-a3b6-45fe-a4bb-4c31d2f1c58f",
+                    "qty": 10
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "GetByID",
+        "operationId": "GetByID",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/orderID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "All",
+        "operationId": "GetAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoginRequest": {
+        "title": "LoginRequest",
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "email": "halobandung@gmail.com",
+          "password": "12347890"
+        }
+      },
+      "RegisterRequest": {
+        "title": "RegisterRequest",
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "kembalilah",
+          "email": "kembalisemula@gmail.com",
+          "password": "12347890"
+        }
+      },
+      "CreateRequest": {
+        "title": "CreateRequest",
+        "required": [
+          "name",
+          "address",
+          "email",
+          "gender",
+          "phone"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "Hai Dia",
+          "address": "Surgawi",
+          "email": "karenadia@gmail.com",
+          "gender": "female",
+          "phone": "123456789012"
+        }
+      },
+      "UpdateRequest": {
+        "title": "UpdateRequest",
+        "required": [
+          "name",
+          "address",
+          "email",
+          "gender",
+          "phone"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "jalan surga",
+          "address": "Surgawi",
+          "email": "mugkinkahstincky@gmail.com",
+          "gender": "female",
+          "phone": "123456789012"
+        }
+      },
+      "CreateRequest1": {
+        "title": "CreateRequest1",
+        "required": [
+          "customer_id",
+          "products"
+        ],
+        "type": "object",
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            },
+            "description": ""
+          }
+        },
+        "example": {
+          "customer_id": "f54dee8c-871a-4a08-9a16-0193c86de88d",
+          "products": [
+            {
+              "product_id": "1f7d8f94-e6cb-4546-9b20-3a3d37c708a0",
+              "qty": 5
+            },
+            {
+              "product_id": "c2e94384-4a92-491e-9b14-f5c48a352660",
+              "qty": 10
+            }
+          ]
+        }
+      },
+      "Product": {
+        "title": "Product",
+        "required": [
+          "product_id",
+          "qty"
+        ],
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "qty": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "product_id": "1f7d8f94-e6cb-4546-9b20-3a3d37c708a0",
+          "qty": 5
+        }
+      },
+      "UpdateRequest1": {
+        "title": "UpdateRequest1",
+        "required": [
+          "customer_id",
+          "products"
+        ],
+        "type": "object",
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            },
+            "description": ""
+          }
+        },
+        "example": {
+          "customer_id": "b7fc44e0-c56d-47df-9bb4-4e83047a65ca",
+          "products": [
+            {
+              "product_id": "3a67c98f-afd0-4311-b602-9d34c1338d36",
+              "qty": 5
+            },
+            {
+              "product_id": "f5057ed3-3f34-4601-a33f-07373595931e",
+              "qty": 10
+            },
+            {
+              "product_id": "ea8ebd9a-a3b6-45fe-a4bb-4c31d2f1c58f",
+              "qty": 10
+            }
+          ]
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "parameters": {
+      "customerID": {
+        "name": "id",
+        "in": "path",
+        "description": "ID Customer",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "example": "5151fe66-1340-4a1c-b04b-301fee5a34ad"
+      },
+      "orderID": {
+        "name": "id",
+        "in": "path",
+        "description": "ID Order",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "example": "93a58cf0-e256-4e67-ab3a-e6f098698582"
+      }
+    }
+  },
+  "security": [],
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Customers"
+    },
+    {
+      "name": "Orders"
+    },
+    {
+      "name": "Products"
+    }
+  ]
+}
