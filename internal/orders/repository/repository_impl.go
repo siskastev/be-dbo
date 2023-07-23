@@ -76,18 +76,20 @@ func (o *orderRepository) getProductByID(tx *gorm.DB, productID uuid.UUID) (*mod
 	return &product, nil
 }
 
-//	func (o *orderRepository) getOrderDetail(tx *gorm.DB, id uuid.UUID) (*[]models.OrderDetail, error) {
-//		var orderDetail []models.OrderDetail
-//		if err := tx.Where(models.OrderDetail{OrderID: id}).First(&orderDetail).Error; err != nil {
-//			return nil, err
-//		}
-//		return &orderDetail, nil
-//	}
 func (o *orderRepository) getOrderById(tx *gorm.DB, id uuid.UUID) (models.Order, error) {
 	var order models.Order
 	if err := tx.Preload("OrderDetails").First(&order, id).Error; err != nil {
 		return order, err
 	}
+	return order, nil
+}
+
+func (o *orderRepository) GetOrderByID(id uuid.UUID) (models.Order, error) {
+	var order models.Order
+	if err := o.db.Preload("OrderDetails").Unscoped().Preload("Customer").First(&order, id).Error; err != nil {
+		return order, err
+	}
+
 	return order, nil
 }
 

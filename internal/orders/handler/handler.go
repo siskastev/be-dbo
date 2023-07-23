@@ -80,6 +80,26 @@ func (h *HandlerOrder) DeleteHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Success Delete OrderID " + orderID})
 }
 
+func (h *HandlerOrder) GetOrderByID(c *gin.Context) {
+
+	orderID := c.Param("id")
+	id := helpers.ParseUUID(orderID)
+
+	_, err := h.orderService.OrderIDExist(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	result, err := h.orderService.GetOrderByID(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": result})
+}
+
 func (h *HandlerOrder) UpdateOrder(c *gin.Context) {
 	var request models.OrderRequest
 	if err := c.ShouldBindJSON(&request); err != nil {

@@ -34,4 +34,5 @@ func (a *OrderRoute) RegisterRoute(r *gin.RouterGroup) {
 	r.POST("/orders", a.handler.CreateOrder)
 	r.PUT("/orders/:id", a.handler.UpdateOrder)
 	r.DELETE("/orders/:id", a.handler.DeleteHandler)
+	r.GET("/orders/:id", a.handler.GetOrderByID)
 }

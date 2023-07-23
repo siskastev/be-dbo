@@ -86,7 +86,7 @@ func (o *orderService) CreateOrder(request models.OrderRequest) (models.OrderRes
 
 	for i, orderDetail := range result.OrderDetails {
 		response.OrderDetail[i] = models.OrderDetailResponse{
-			ID:          result.ID.String(),
+			ID:          uint(orderDetail.ID),
 			ProductID:   orderDetail.ProductID.String(),
 			ProductName: orderDetail.ProductName,
 			UnitPrice:   orderDetail.UnitPrice,
@@ -193,7 +193,7 @@ func (o *orderService) UpdateOrder(request models.OrderRequest, id uuid.UUID) (m
 
 	for i, orderDetail := range result.OrderDetails {
 		response.OrderDetail[i] = models.OrderDetailResponse{
-			ID:          result.ID.String(),
+			ID:          uint(orderDetail.ID),
 			ProductID:   orderDetail.ProductID.String(),
 			ProductName: orderDetail.ProductName,
 			UnitPrice:   orderDetail.UnitPrice,
@@ -204,4 +204,38 @@ func (o *orderService) UpdateOrder(request models.OrderRequest, id uuid.UUID) (m
 
 	return response, nil
 
+}
+
+func (o *orderService) GetOrderByID(id uuid.UUID) (models.ManageOrderResponse, error) {
+	result, err := o.orderRepo.GetOrderByID(id)
+	if err != nil {
+		return models.ManageOrderResponse{}, err
+	}
+
+	response := models.ManageOrderResponse{
+		ID:           result.ID.String(),
+		CustomerID:   result.CustomerID.String(),
+		CustomerName: result.Customer.Name,
+		Status:       result.Status,
+		TotalItems:   result.TotalItems,
+		TotalPrice:   result.TotalPrice,
+		CreatedAt:    result.CreatedAt,
+		CreatedBy:    result.CreatedBy,
+		UpdatedAt:    result.UpdatedAt,
+		UpdatedBy:    result.UpdatedBy,
+		OrderDetail:  make([]models.OrderDetailResponse, len(result.OrderDetails)),
+	}
+
+	for i, orderDetail := range result.OrderDetails {
+		response.OrderDetail[i] = models.OrderDetailResponse{
+			ID:          uint(orderDetail.ID),
+			ProductID:   orderDetail.ProductID.String(),
+			ProductName: orderDetail.ProductName,
+			UnitPrice:   orderDetail.UnitPrice,
+			Qty:         orderDetail.Qty,
+			TotalPrice:  orderDetail.TotalPrice,
+		}
+	}
+
+	return response, nil
 }

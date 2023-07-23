@@ -13,4 +13,5 @@ type Service interface {
 	OrderIDExist(id uuid.UUID) (bool, error)
 	UpdateOrder(request models.OrderRequest, id uuid.UUID) (models.OrderResponse, error)
 	OrderHasPaid(id uuid.UUID) (bool, error)
+	GetOrderByID(id uuid.UUID) (models.ManageOrderResponse, error)
 }

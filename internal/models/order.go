@@ -34,17 +34,18 @@ func (ct status) Value() (driver.Value, error) {
 
 type Order struct {
 	gorm.Model
-	ID           uuid.UUID `gorm:"type:uuid;column:id;primaryKey;default:gen_random_uuid()"`
-	CustomerID   uuid.UUID `gorm:"column:customer_id;not null"`
-	TotalItems   uint16    `gorm:"column:total_items;not null"`
-	TotalPrice   float64   `gorm:"column:total_price;not null;"`
-	Status       status    `gorm:"column:status;not null;"`
-	CreatedAt    time.Time `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt    time.Time `gorm:"column:updated_at;autoUpdateTime"`
-	CreatedBy    string    `gorm:"column:created_by;type:varchar(100);not null"`
-	UpdatedBy    string    `gorm:"column:updated_by;type:varchar(100);not null"`
-	OrderDetails []OrderDetail
+	ID           uuid.UUID      `gorm:"type:uuid;column:id;primaryKey;default:gen_random_uuid()"`
+	CustomerID   uuid.UUID      `gorm:"column:customer_id;not null"`
+	TotalItems   uint16         `gorm:"column:total_items;not null"`
+	TotalPrice   float64        `gorm:"column:total_price;not null;"`
+	Status       status         `gorm:"column:status;not null;"`
+	CreatedAt    time.Time      `gorm:"column:created_at;autoCreateTime"`
+	UpdatedAt    time.Time      `gorm:"column:updated_at;autoUpdateTime"`
+	CreatedBy    string         `gorm:"column:created_by;type:varchar(100);not null"`
+	UpdatedBy    string         `gorm:"column:updated_by;type:varchar(100);not null"`
+	OrderDetails []OrderDetail  `gorm:"foreignKey:OrderID"`
 	DeletedAt    gorm.DeletedAt `gorm:"column:deleted_at;"`
+	Customer     Customer       `gorm:"foreignKey:CustomerID"`
 }
 
 type OrderRequest struct {
@@ -73,7 +74,7 @@ type OrderResponse struct {
 }
 
 type OrderDetailResponse struct {
-	ID          string  `json:"order_id"`
+	ID          uint    `json:"order_id"`
 	ProductID   string  `json:"product_id"`
 	ProductName string  `json:"product_name"`
 	UnitPrice   float64 `json:"unit_price"`
@@ -82,11 +83,15 @@ type OrderDetailResponse struct {
 }
 
 type ManageOrderResponse struct {
+	ID           string                `json:"order_id"`
 	CustomerID   string                `json:"customer_id"`
 	CustomerName string                `json:"customer_name"`
-	CreatedAt    *time.Time            `json:"created_at,omitempty"`
+	Status       status                `json:"status"`
+	TotalItems   uint16                `json:"total_items"`
+	TotalPrice   float64               `json:"total_price"`
+	CreatedAt    time.Time             `json:"created_at,omitempty"`
 	CreatedBy    string                `json:"created_by,omitempty"`
-	UpdatedAt    *time.Time            `json:"updated_at,omitempty"`
+	UpdatedAt    time.Time             `json:"updated_at,omitempty"`
 	UpdatedBy    string                `json:"updated_by,omitempty"`
-	Products     []ProductOrderRequest `json:"products"`
+	OrderDetail  []OrderDetailResponse `json:"order_detail"`
 }
