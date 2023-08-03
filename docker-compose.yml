@@ -1,42 +1,39 @@
-version: '3.8'
+version: '3'
 services:
-  # app:
-  #     build:
-  #       context: .
-  #       dockerfile: Dockerfile
-  #     container_name: api-order-management
-  #     depends_on:
-  #       - postgresdb
-  #     environment:
-  #       - DB_USER=${DB_USER}
-  #       - DB_PASSWORD=${DB_PASSWORD}
-  #       - DB_NAME=${DB_NAME}
-  #       - DB_HOST=${DB_HOST}
-  #       - DB_PORT=${DB_PORT}
-  #       - JWT_PRIVATE_KEY= ${JWT_PRIVATE_KEY}
-  #       - APP_PORT=${APP_PORT}
-  #     ports:
-  #       - "9000:9000"
-  #     networks:
-  #     - dbo
+  app:
+    container_name: dbo-be
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 9000:9000
+    env_file:
+      - .env
+    depends_on:
+      - postgresdb
+    networks:
+      - dbo
 
   postgresdb:
-    image: postgres:latest
-    restart: always
+    image: postgres:14-alpine
+    container_name: dbo_postgres
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
     ports:
-      - '5433:5432'
+      - '5432:5432'
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
-#     networks:
-#       - dbo
-# # Networks to be created to facilitate communication between containers
-# networks:
-#   dbo:
-#     driver: bridge
+      - database_posgresql:/var/lib/postgresql/data
+    networks:
+      - dbo
 
-# volumes:
-#   postgresql:
+volumes:
+  database_posgresql:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  dbo:
+    driver: bridge

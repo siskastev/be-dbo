@@ -2,10 +2,13 @@ package database
 
 import (
 	"fmt"
-	"os"
-
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"os"
 )
 
 var DB *gorm.DB
@@ -27,6 +30,17 @@ func Init() {
 	}
 
 	seeder(db)
+
+	// Apply migrations
+	m, err := migrate.New("file://internal/config/database/migrations", fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName))
+	if err != nil {
+		log.Fatal("failed to create migrations instance:", err)
+	}
+
+	err = m.Up()
+	if err != nil && err != migrate.ErrNoChange {
+		log.Fatal("failed to apply migrations:", err)
+	}
 
 	DB = db
 }
