@@ -27,20 +27,11 @@ git clone https://github.com/siskastev/be-dbo.git
 cd be-dbo
 ```
 3. Rename or copy .env.example to .env
-4. Run Docker Compose Up for database PostgresSql
+4. Run Docker Compose Up for running system with docker
 ```bash
 docker-compose up
 ```
-5. run main.go in directory cmd
-```bash
-go run .\cmd\main.go
-```
-6. Open new terminal to up migration table orders. migration in directory internal/config
-```bash
-cd internal/config
-migrate -path database/migrations -database "postgres://dbo:1234@localhost:5433/dbo_management?sslmode=disable" up
-```
-7. can access `api-doc.json` to testing
+5. can access `api-doc.json` to testing
 
 ## API Documentation
 The API documentation for the API Order Management project is provided in the `api-doc.json` file. 
